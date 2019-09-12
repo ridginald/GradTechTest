@@ -1,31 +1,24 @@
 function createMenuData (data) {
-  var result = []
-  var obj
-  for (var i = 0; i < data.length; i++) {
-    var splitMenuData = data[i].split('/')
-    if (splitMenuData.length > 1) {
-      obj = {}
-      obj.title = splitMenuData[0]
-      obj.data = splitMenuData[1]
-      result.push(obj)
-    }
-  }
-  const parents = {}
-  result.forEach(function (object) {
-    if (!parents[object.title]) {
-      parents[object.title] = {
-        title: object.title,
-        data: []
+  const result = []
+  data.forEach(text => {
+    var items = text.split('/')
+
+    if (items.length > 1) {
+      var exists = result.find(element => {
+        return element.title === items[0]
+      })
+      if (exists) {
+        exists.data.push(items[1])
+      } else {
+        result.push({
+          title: items[0],
+          data: [items[1]]
+        })
       }
     }
-    parents[object.title].data.push(object.data)
-  })
-
-  const menuList = []
-  Object.keys(parents).forEach(function (title) {
-    menuList.push(parents[title])
-  })
-  return menuList
+  }
+  )
+  return result
 }
 
 describe('menu Data Generator', () => {
